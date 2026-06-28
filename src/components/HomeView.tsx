@@ -28,6 +28,51 @@ import soloTravelerImg from '../assets/images/solo_traveler_vespa_1782638136640.
 import vintageVespaImg from '../assets/images/vintage_vespa_1782636799449.jpg';
 import commuterBicycleImg from '../assets/images/commuter_bicycle_1782636850113.jpg';
 
+const routesData = {
+  cafe: {
+    title: "French Quarter Cafe Hop",
+    distance: "3.5 km",
+    duration: "15-20 mins",
+    intensity: "Easy Breezy Riding",
+    spots: [
+      { name: "Baker Street", desc: "Start with warm French croissants & fresh espresso." },
+      { name: "Villa Shanti", desc: "Snap beautiful photos against iconic mustard-yellow walls." },
+      { name: "Cafe Des Arts", desc: "Enjoy organic iced tea surrounded by vintage bohemian art." }
+    ],
+    mapTip: "Perfect for vintage cruiser bicycles and retro Vespas! Very quiet, shade-filled avenues.",
+    funFact: "Pondicherry's French Quarter has a perfect grid-style layout, making it impossible to get lost!",
+    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=800"
+  },
+  coast: {
+    title: "Promenade Coastal Cruise",
+    distance: "5.2 km",
+    duration: "25-30 mins",
+    intensity: "Scenic & Refreshing",
+    spots: [
+      { name: "Gandhi Statue", desc: "Ride along the wide, traffic-free coastal boulevard." },
+      { name: "Old Lighthouse", desc: "A historic 19th-century landmark standing right by the waves." },
+      { name: "Le Cafe", desc: "24/7 seaside cafe where you can sit right next to breaking ocean waves." }
+    ],
+    mapTip: "The sea breeze feels amazing! We recommend doing this cruise during sunset (4:30 PM - 6:30 PM).",
+    funFact: "Vehicles are completely closed on Beach Road after 6 PM, creating a wonderful walker/cyclist-only paradise!",
+    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=800"
+  },
+  spiritual: {
+    title: "Auroville Scenic Trail",
+    distance: "12.8 km",
+    duration: "35-45 mins",
+    intensity: "Spirited Adventure",
+    spots: [
+      { name: "East Coast Road (ECR)", desc: "A scenic palm-lined highway stretch with smooth, wide roads." },
+      { name: "Matrimandir Viewing Point", desc: "The breathtaking golden globe spiritual sanctuary at the heart of Auroville." },
+      { name: "Marc's Cafe / Solitude Farm", desc: "Fabulous gourmet coffees and organic farm-to-table lunch stops." }
+    ],
+    mapTip: "Best experienced with our gearless Vespas or sportier motorcycles. Ensure your helmet is securely strapped!",
+    funFact: "Auroville was founded in 1968 and is home to over 3,000 residents from over 50 different countries!",
+    image: "https://images.unsplash.com/photo-1582208225574-897db6743b17?auto=format&fit=crop&q=80&w=800"
+  }
+};
+
 interface HomeViewProps {
   onBrowseBikes: () => void;
 }
@@ -42,9 +87,7 @@ export default function HomeView({ onBrowseBikes }: HomeViewProps) {
 
   // Custom Interactive Feature States
   const [activeFeature, setActiveFeature] = useState<'deposit' | 'fleet' | 'support' | 'helmets'>('fleet');
-  const [isWiping, setIsWiping] = useState(false);
-  const [wipeCount, setWipeCount] = useState(14);
-  const [wipeComplete, setWipeComplete] = useState(false);
+  const [selectedRoute, setSelectedRoute] = useState<'cafe' | 'coast' | 'spiritual'>('cafe');
   const [helmetColor, setHelmetColor] = useState<'mint' | 'yellow' | 'charcoal'>('mint');
   const [helmetSize, setHelmetSize] = useState<'S' | 'M' | 'L' | 'XL'>('M');
   const [depositDays, setDepositDays] = useState(3);
@@ -86,181 +129,210 @@ export default function HomeView({ onBrowseBikes }: HomeViewProps) {
       {/* Hero Section */}
       <section 
         id="hero-banner-section"
-        className="relative px-4 sm:px-6 lg:px-8 py-16 md:py-24 max-w-7xl mx-auto rounded-3xl overflow-hidden mt-6 border-4 border-brand-olive shadow-2xl bg-cover bg-center"
-        style={{ backgroundImage: `url(${beachRideImg})` }}
+        className="relative px-4 sm:px-6 lg:px-8 py-12 md:py-16 max-w-7xl mx-auto rounded-3xl overflow-hidden mt-6 border-4 border-brand-olive shadow-2xl bg-gradient-to-br from-brand-yellow-light via-brand-yellow to-brand-yellow-light"
       >
-        {/* Luxury Dark Olive & Charcoal Gradient Mask to make text pop with stellar contrast, while keeping beach background beautiful and visible */}
-        <div className="absolute inset-0 bg-gradient-to-r from-brand-charcoal/95 via-brand-charcoal/80 to-brand-olive/35 z-0" />
-        
-        {/* Subtle decorative grid overlay inside hero */}
-        <div className="absolute inset-0 bg-[radial-gradient(#354521_1px,transparent_1px)] [background-size:20px_20px] opacity-10 z-0" />
+        {/* Soft elegant warm ambient glows */}
+        <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-white/30 rounded-full blur-3xl pointer-events-none z-0" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-brand-cream/40 rounded-full blur-3xl pointer-events-none z-0" />
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
-          
-          {/* Hero Content Left */}
+        {/* Top Content: Beautiful Brand Badges and Certifications */}
+        <div className="relative z-10 flex flex-col sm:flex-row items-center justify-center gap-3.5 mb-10">
+          <div className="inline-flex items-center gap-2 bg-brand-olive text-brand-yellow px-4.5 py-2 rounded-full font-sans font-extrabold text-xs tracking-wider uppercase shadow-md border border-brand-olive-light/20 animate-pulse">
+            <Sparkles className="w-4 h-4 text-brand-yellow" />
+            Pondicherry’s Premium Fleet
+          </div>
           <motion.div 
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            className="lg:col-span-6 space-y-6"
+            animate={{ y: [0, -3, 0], rotate: [-0.5, 0.5, -0.5] }}
+            transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+            className="bg-brand-olive text-brand-yellow px-4.5 py-2 rounded-full border border-brand-olive-light/20 font-sans font-black text-xs tracking-wider uppercase shadow-md flex items-center gap-1.5"
           >
-            <div className="inline-flex items-center gap-2 bg-brand-yellow text-brand-charcoal px-4 py-2 rounded-full font-sans font-extrabold text-xs tracking-wider uppercase shadow-md border border-brand-olive/30 animate-pulse">
-              <Sparkles className="w-4 h-4 text-brand-olive-dark" />
-              Pondicherry’s Premium Fleet
-            </div>
-            
-            <div className="space-y-4">
-              <h2 className="font-display font-black text-4xl sm:text-5xl text-white leading-tight">
-                Rent Your Ride, <br />
-                <span className="text-brand-yellow font-extrabold drop-shadow-xs">
-                  Explore Pondicherry
-                </span>
-              </h2>
-              
-              <p className="text-brand-cream/90 font-medium text-base sm:text-lg max-w-lg leading-relaxed">
-                Experience the charming French Quarter, breezy Promenade Beach, and spiritual Auroville on your own terms. Smooth rides, fair pricing, and absolute freedom.
-              </p>
-            </div>
+            <Sparkles className="w-3.5 h-3.5 text-brand-yellow animate-spin-slow" />
+            100% PONDICHERRY VIBES
+          </motion.div>
+        </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 pt-2">
-              <button
-                id="btn-hero-browse"
-                onClick={onBrowseBikes}
-                className="inline-flex items-center justify-center gap-2 bg-brand-yellow hover:bg-brand-yellow-light text-brand-charcoal font-sans font-black text-base px-8 py-4 rounded-xl shadow-lg transition-all hover:scale-[1.03] active:scale-98 cursor-pointer group"
-              >
-                Browse Bikes
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform" />
-              </button>
-              
-              <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-3 rounded-xl shadow-xs">
-                <div className="flex -space-x-2">
-                  <div className="w-8 h-8 rounded-full bg-brand-yellow border-2 border-brand-olive flex items-center justify-center text-[10px] font-bold text-brand-charcoal">5★</div>
-                  <div className="w-8 h-8 rounded-full bg-brand-olive border-2 border-brand-yellow flex items-center justify-center text-[10px] font-bold text-brand-yellow">LY</div>
-                  <div className="w-8 h-8 rounded-full bg-brand-charcoal border-2 border-brand-yellow flex items-center justify-center text-[10px] font-bold text-white">PD</div>
-                </div>
-                <div className="text-xs">
-                  <span className="font-bold text-brand-yellow block">1,200+ Happy Explorers</span>
-                  <span className="text-brand-cream/80 font-bold">Average rating of 4.9/5</span>
-                </div>
+        {/* Highlighted Images Grid: Storefront at the absolute top, followed by customer polaroids */}
+        <div className="relative z-10 max-w-5xl mx-auto mb-12 space-y-6">
+          
+          {/* Main Storefront Highlight Card (Original Shop Image) */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 15 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="w-full max-w-2xl mx-auto bg-brand-cream p-3 sm:p-4 rounded-2xl shadow-xl border-4 border-brand-olive cursor-pointer group hover:scale-[1.01] transition-all duration-300"
+          >
+            <div className="relative overflow-hidden rounded-xl aspect-[16/10] sm:aspect-[16/9] border border-brand-olive/20">
+              <img 
+                src="https://i.ibb.co/SDNsg2M3/Screenshot-20260628-185933.jpg" 
+                alt="Laya Bike Rental Shop Storefront" 
+                className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-700"
+                referrerPolicy="no-referrer"
+              />
+              {/* Highlight Overlay / Badges */}
+              <div className="absolute top-3 left-3 bg-brand-yellow border-2 border-brand-olive text-brand-charcoal font-sans font-black text-[10px] sm:text-xs px-3 py-1 rounded-lg shadow-md uppercase tracking-wider">
+                12+ Years of Trusted Service
+              </div>
+              <div className="absolute bottom-3 right-3 bg-brand-olive/90 backdrop-blur-md border border-brand-yellow/30 text-brand-yellow font-sans font-bold text-[9px] sm:text-xs px-3 py-1.5 rounded-lg shadow-md flex items-center gap-1">
+                <MapPin className="w-3 h-3 text-brand-yellow" /> Belcombe Street, Pondicherry
               </div>
             </div>
-
-            {/* Quick trust bullet bar */}
-            <div className="grid grid-cols-3 gap-4 pt-6 border-t border-white/10">
+            <div className="mt-3 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-2 px-1">
               <div>
-                <span className="font-display font-extrabold text-xl text-brand-yellow block">₹0</span>
-                <span className="text-xs text-brand-cream/80 font-black">Security Deposit</span>
+                <h4 className="font-display font-black text-sm sm:text-base text-brand-charcoal">
+                  Our Official Laya Storefront Hub
+                </h4>
+                <p className="text-xs text-brand-charcoal/70 font-semibold mt-0.5">
+                  Walk in and choose from our premium, sanitized, and perfectly maintained fleet!
+                </p>
               </div>
-              <div>
-                <span className="font-display font-extrabold text-xl text-brand-yellow block">2 Helmets</span>
-                <span className="text-xs text-brand-cream/80 font-black">Free of Charge</span>
-              </div>
-              <div>
-                <span className="font-display font-extrabold text-xl text-brand-yellow block">Unlimited</span>
-                <span className="text-xs text-brand-cream/80 font-black">Kilometers / Ride</span>
-              </div>
+              <span className="inline-flex items-center gap-1.5 bg-brand-olive text-brand-yellow text-[10px] font-extrabold px-3 py-1.5 rounded-full uppercase tracking-wider shadow-xs border border-brand-yellow/20">
+                <CheckCircle2 className="w-3.5 h-3.5 text-brand-yellow" /> Primary Shop
+              </span>
             </div>
           </motion.div>
 
-          {/* Hero Visual Right - Dynamic Scattered Polaroid Gallery with beautiful positioning */}
-          <div className="lg:col-span-6 relative h-[480px] sm:h-[540px] w-full mt-8 lg:mt-0">
-            {/* Ambient background glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-brand-yellow/10 rounded-full blur-3xl -z-10" />
-
+          {/* Customer Experience Polaroids Grid */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 w-full">
             {/* Polaroid 1: Happy Couple */}
             <motion.div
               id="hero-polaroid-couple"
-              initial={{ opacity: 0, scale: 0.9, rotate: -6, y: 30 }}
-              animate={{ opacity: 1, scale: 1, rotate: -6, y: 0 }}
-              whileHover={{ scale: 1.08, zIndex: 40, rotate: -2 }}
+              initial={{ opacity: 0, scale: 0.9, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              whileHover={{ scale: 1.05, rotate: -1, zIndex: 10 }}
               transition={{ duration: 0.5, ease: "easeOut" }}
-              className="absolute left-[2%] top-[4%] w-48 sm:w-56 bg-white p-2.5 pb-7 rounded-lg shadow-xl border-2 border-brand-olive z-10 cursor-pointer"
+              className="bg-brand-cream p-2 sm:p-2.5 pb-5 sm:pb-6 rounded-lg shadow-md border-2 border-brand-olive cursor-pointer rotate-[-2deg] transition-transform duration-300"
             >
-              <div className="relative overflow-hidden rounded-xs">
+              <div className="relative overflow-hidden rounded-xs aspect-video sm:aspect-[4/3] border border-brand-olive/10">
                 <img 
                   src={happyCoupleImg} 
                   alt="Exploring French Quarter" 
-                  className="w-full h-28 sm:h-36 object-cover"
+                  className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
                 />
-                <span className="absolute bottom-2 right-2 bg-brand-yellow border border-brand-olive text-brand-charcoal text-[9px] font-black px-2 py-0.5 rounded-full shadow-xs">White Town</span>
+                <span className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 bg-brand-yellow border border-brand-olive text-brand-charcoal text-[8px] sm:text-[9px] font-black px-1.5 py-0.5 rounded-full shadow-xs">White Town</span>
               </div>
-              <p className="font-display font-black text-[10px] sm:text-xs text-brand-olive-dark mt-2 text-center">Sneha & Amit in French Quarter</p>
+              <p className="font-display font-black text-[9px] sm:text-xs text-brand-olive-dark mt-1.5 sm:mt-2 text-center truncate">Sneha & Amit: French Town</p>
             </motion.div>
 
             {/* Polaroid 2: Promenade Sunset Rider */}
             <motion.div
               id="hero-polaroid-promenade"
-              initial={{ opacity: 0, scale: 0.9, rotate: 6, y: 30 }}
-              animate={{ opacity: 1, scale: 1, rotate: 6, y: 0 }}
-              whileHover={{ scale: 1.08, zIndex: 40, rotate: 2 }}
+              initial={{ opacity: 0, scale: 0.9, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              whileHover={{ scale: 1.05, rotate: 1, zIndex: 10 }}
               transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-              className="absolute right-[2%] top-[8%] w-48 sm:w-56 bg-white p-2.5 pb-7 rounded-lg shadow-xl border-2 border-brand-olive z-25 cursor-pointer"
+              className="bg-brand-cream p-2 sm:p-2.5 pb-5 sm:pb-6 rounded-lg shadow-md border-2 border-brand-olive cursor-pointer rotate-[1.5deg] transition-transform duration-300"
             >
-              <div className="relative overflow-hidden rounded-xs">
+              <div className="relative overflow-hidden rounded-xs aspect-video sm:aspect-[4/3] border border-brand-olive/10">
                 <img 
                   src={beachRideImg} 
                   alt="Promenade Beach Cruise" 
-                  className="w-full h-28 sm:h-36 object-cover"
+                  className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
                 />
-                <span className="absolute bottom-2 right-2 bg-brand-olive text-brand-yellow text-[9px] font-black px-2 py-0.5 rounded-full shadow-xs">Promenade</span>
+                <span className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 bg-brand-olive text-brand-yellow text-[8px] sm:text-[9px] font-black px-1.5 py-0.5 rounded-full shadow-xs">Promenade</span>
               </div>
-              <p className="font-display font-black text-[10px] sm:text-xs text-brand-olive-dark mt-2 text-center">Tanya's Promenade Sunset Cruise</p>
+              <p className="font-display font-black text-[9px] sm:text-xs text-brand-olive-dark mt-1.5 sm:mt-2 text-center truncate">Tanya's Sunset Cruise</p>
             </motion.div>
 
             {/* Polaroid 3: Friends with Bicycles */}
             <motion.div
               id="hero-polaroid-friends"
-              initial={{ opacity: 0, scale: 0.9, rotate: 2, y: 30 }}
-              animate={{ opacity: 1, scale: 1, rotate: 2, y: 0 }}
-              whileHover={{ scale: 1.08, zIndex: 40, rotate: -1 }}
+              initial={{ opacity: 0, scale: 0.9, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              whileHover={{ scale: 1.05, rotate: -1, zIndex: 10 }}
               transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
-              className="absolute left-[6%] bottom-[4%] w-44 sm:w-52 bg-white p-2.5 pb-6 rounded-lg shadow-lg border-2 border-brand-olive z-15 cursor-pointer"
+              className="bg-brand-cream p-2 sm:p-2.5 pb-5 sm:pb-6 rounded-lg shadow-md border-2 border-brand-olive cursor-pointer rotate-[-1deg] transition-transform duration-300"
             >
-              <div className="relative overflow-hidden rounded-xs">
+              <div className="relative overflow-hidden rounded-xs aspect-video sm:aspect-[4/3] border border-brand-olive/10">
                 <img 
                   src={friendsBicyclesImg} 
                   alt="Friends cycling heritage town" 
-                  className="w-full h-24 sm:h-32 object-cover"
+                  className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
                 />
+                <span className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 bg-brand-yellow border border-brand-olive text-brand-charcoal text-[8px] sm:text-[9px] font-black px-1.5 py-0.5 rounded-full shadow-xs">Heritage</span>
               </div>
-              <p className="font-display font-black text-[9px] sm:text-[10px] text-brand-olive-dark mt-1.5 text-center">Squad Goals: Eco Heritage Biking</p>
+              <p className="font-display font-black text-[9px] sm:text-xs text-brand-olive-dark mt-1.5 sm:mt-2 text-center truncate">Squad Goals: Eco Ride</p>
             </motion.div>
 
             {/* Polaroid 4: Solo Vespa Explorer */}
             <motion.div
               id="hero-polaroid-solo"
-              initial={{ opacity: 0, scale: 0.9, rotate: -8, y: 30 }}
-              animate={{ opacity: 1, scale: 1, rotate: -8, y: 0 }}
-              whileHover={{ scale: 1.08, zIndex: 40, rotate: -2 }}
+              initial={{ opacity: 0, scale: 0.9, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              whileHover={{ scale: 1.05, rotate: 2, zIndex: 10 }}
               transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}
-              className="absolute right-[6%] bottom-[8%] w-44 sm:w-52 bg-white p-2.5 pb-6 rounded-lg shadow-lg border-2 border-brand-olive z-20 cursor-pointer"
+              className="bg-brand-cream p-2 sm:p-2.5 pb-5 sm:pb-6 rounded-lg shadow-md border-2 border-brand-olive cursor-pointer rotate-[2deg] transition-transform duration-300"
             >
-              <div className="relative overflow-hidden rounded-xs">
+              <div className="relative overflow-hidden rounded-xs aspect-video sm:aspect-[4/3] border border-brand-olive/10">
                 <img 
                   src={soloTravelerImg} 
                   alt="Solo Explorer Priya" 
-                  className="w-full h-24 sm:h-32 object-cover"
+                  className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
                 />
-                <span className="absolute bottom-2 right-2 bg-brand-yellow border border-brand-olive text-brand-charcoal text-[9px] font-black px-2 py-0.5 rounded-full shadow-xs">Auroville</span>
+                <span className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 bg-brand-yellow border border-brand-olive text-brand-charcoal text-[8px] sm:text-[9px] font-black px-1.5 py-0.5 rounded-full shadow-xs">Auroville</span>
               </div>
-              <p className="font-display font-black text-[9px] sm:text-[10px] text-brand-olive-dark mt-1.5 text-center">Priya's Solo Auroville Adventure</p>
-            </motion.div>
-
-            {/* Decorative Heritage Stamp Badge floating in center */}
-            <motion.div 
-              animate={{ y: [0, -6, 0], rotate: [8, 12, 8] }}
-              transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-              className="absolute left-[38%] top-[42%] bg-brand-yellow text-brand-charcoal px-3 py-1.5 rounded-full border-2 border-brand-olive font-sans font-black text-[9px] tracking-wider uppercase shadow-xl z-30 pointer-events-none flex items-center gap-1"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-brand-olive-dark animate-spin-slow" />
-              100% PONDY VIBES
+              <p className="font-display font-black text-[9px] sm:text-xs text-brand-olive-dark mt-1.5 sm:mt-2 text-center truncate">Priya's Solo Adventure</p>
             </motion.div>
           </div>
 
+        </div>
+
+        {/* Bottom Content: Hero Content Centered (appearing below the images) */}
+        <div className="flex flex-col items-center text-center max-w-4xl mx-auto space-y-6 relative z-10">
+          <div className="space-y-4">
+            <h2 className="font-display font-black text-4xl sm:text-5xl lg:text-6xl text-brand-charcoal leading-tight">
+              Rent Your Ride, <br className="sm:hidden" />
+              <span className="text-brand-olive font-extrabold drop-shadow-xs">
+                Explore Pondicherry
+              </span>
+            </h2>
+            
+            <p className="text-brand-charcoal/90 font-semibold text-sm sm:text-base max-w-2xl leading-relaxed mx-auto">
+              Experience the charming French Quarter, breezy Promenade Beach, and spiritual Auroville on your own terms. Smooth rides, fair pricing, and absolute freedom.
+            </p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2 w-full">
+            <button
+              id="btn-hero-browse"
+              onClick={onBrowseBikes}
+              className="inline-flex items-center justify-center gap-2 bg-brand-olive hover:bg-brand-olive-light text-brand-yellow font-sans font-black text-base px-8 py-4 rounded-xl shadow-lg transition-all hover:scale-[1.03] active:scale-98 cursor-pointer group w-full sm:w-auto border-2 border-brand-charcoal"
+            >
+              Browse Bikes
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform text-brand-yellow" />
+            </button>
+            
+            <div className="flex items-center gap-3 bg-brand-cream border border-brand-olive/20 px-4 py-3 rounded-xl shadow-sm w-full sm:w-auto justify-center">
+              <div className="flex -space-x-2">
+                <div className="w-8 h-8 rounded-full bg-brand-yellow border-2 border-brand-olive flex items-center justify-center text-[10px] font-bold text-brand-charcoal">5★</div>
+                <div className="w-8 h-8 rounded-full bg-brand-olive border-2 border-brand-yellow flex items-center justify-center text-[10px] font-bold text-brand-yellow">LY</div>
+                <div className="w-8 h-8 rounded-full bg-brand-charcoal border-2 border-brand-yellow flex items-center justify-center text-[10px] font-bold text-white">PD</div>
+              </div>
+              <div className="text-left text-xs text-brand-charcoal">
+                <span className="font-bold text-brand-olive block">1,200+ Happy Explorers</span>
+                <span className="text-brand-charcoal/70 font-bold">Average rating of 4.9/5</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Quick trust bullet bar */}
+          <div className="grid grid-cols-3 gap-4 pt-6 border-t border-brand-olive/20 w-full max-w-2xl">
+            <div>
+              <span className="font-display font-extrabold text-lg sm:text-xl text-brand-olive block">₹0</span>
+              <span className="text-[10px] sm:text-xs text-brand-charcoal/80 font-black">Security Deposit</span>
+            </div>
+            <div>
+              <span className="font-display font-extrabold text-lg sm:text-xl text-brand-olive block">2 Helmets</span>
+              <span className="text-[10px] sm:text-xs text-brand-charcoal/80 font-black">Free of Charge</span>
+            </div>
+            <div>
+              <span className="font-display font-extrabold text-lg sm:text-xl text-brand-olive block">Unlimited</span>
+              <span className="text-[10px] sm:text-xs text-brand-charcoal/80 font-black">Kilometers / Ride</span>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -448,7 +520,7 @@ export default function HomeView({ onBrowseBikes }: HomeViewProps) {
               </div>
             </motion.div>
 
-            {/* Card 2: Immaculate Fleet */}
+            {/* Card 2: Pondy Route Guide */}
             <motion.div 
               id="feature-card-fleet"
               onClick={() => setActiveFeature('fleet')}
@@ -462,8 +534,8 @@ export default function HomeView({ onBrowseBikes }: HomeViewProps) {
               {/* Background cover image with overlay */}
               <div className="absolute inset-0 z-0 overflow-hidden">
                 <img 
-                  src="https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&q=80&w=800" 
-                  alt="Immaculate Fleet" 
+                  src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&q=80&w=800" 
+                  alt="Scenic Route Guide" 
                   className="w-full h-full object-cover opacity-15 group-hover:opacity-30 transition-all duration-700 group-hover:scale-115"
                   referrerPolicy="no-referrer"
                 />
@@ -478,20 +550,20 @@ export default function HomeView({ onBrowseBikes }: HomeViewProps) {
               <div className="relative z-10 flex flex-col items-center justify-center space-y-2.5 px-3">
                 {/* Icon Container */}
                 <div className="w-12 h-12 rounded-full bg-brand-yellow text-brand-charcoal border-2 border-brand-olive flex items-center justify-center shadow-md transform group-hover:scale-110 transition-transform duration-300">
-                  <Sparkles className="w-6 h-6 text-brand-olive-dark" />
+                  <Navigation className="w-6 h-6 text-brand-olive-dark" />
                 </div>
 
                 <h3 className="font-display font-black text-sm tracking-tight uppercase">
-                  Immaculate Fleet
+                  Pondy Route Guide
                 </h3>
 
                 <p className="font-medium text-[11px] leading-relaxed max-w-[200px] opacity-90">
-                  All vehicles undergo micro-detailing, deep sanitization, and tire safety checks before every rent.
+                  Discover curated self-guided routes for your scooter or bicycle—complete with sights, cafes, and maps.
                 </p>
 
                 {/* Micro badge */}
                 <span className="text-[9px] bg-brand-yellow text-brand-charcoal px-2.5 py-0.5 rounded-full font-black uppercase tracking-wider shadow-xs">
-                  Gloss Standard
+                  3 Guided Routes
                 </span>
               </div>
             </motion.div>
@@ -613,122 +685,114 @@ export default function HomeView({ onBrowseBikes }: HomeViewProps) {
                   transition={{ duration: 0.3 }}
                   className="space-y-6"
                 >
-                  <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-4 border-b border-brand-olive/10">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-brand-olive/10">
                     <div>
                       <span className="bg-brand-yellow text-brand-charcoal text-[10px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider">
-                        Live Showroom Detailing
+                        Self-Guided Adventures
                       </span>
                       <h3 className="font-display font-black text-xl text-brand-olive-dark mt-1 flex items-center gap-2">
-                        <Sparkles className="w-5 h-5 text-brand-yellow-dark animate-spin-slow" />
-                        Pristine Mirror-Grooming Log
+                        <Map className="w-5 h-5 text-brand-olive" />
+                        Pondicherry Curated Route Planner
                       </h3>
                     </div>
-                    <div className="text-right">
-                      <span className="text-xs text-brand-charcoal/60 font-medium block">Polishes Completed Today</span>
-                      <span className="text-2xl font-black font-display text-brand-olive">{wipeCount} Rides Sparkled</span>
+                    <div className="flex flex-wrap gap-2">
+                      {(['cafe', 'coast', 'spiritual'] as const).map((routeKey) => (
+                        <button
+                          id={`btn-route-tab-${routeKey}`}
+                          key={routeKey}
+                          onClick={() => setSelectedRoute(routeKey)}
+                          className={`py-1.5 px-3 rounded-lg font-sans font-black text-xs uppercase tracking-wider cursor-pointer transition-all border ${
+                            selectedRoute === routeKey
+                              ? 'bg-brand-olive text-brand-yellow border-brand-olive shadow-xs'
+                              : 'bg-brand-gray-light text-brand-charcoal border-brand-charcoal/10 hover:bg-brand-cream/60'
+                          }`}
+                        >
+                          {routeKey === 'cafe' && '☕ Cafe Hop'}
+                          {routeKey === 'coast' && '🌊 Coastal'}
+                          {routeKey === 'spiritual' && '🧘 Auroville'}
+                        </button>
+                      ))}
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-                    <div className="lg:col-span-5 relative rounded-xl overflow-hidden border-2 border-brand-olive bg-brand-olive/5 h-48 flex items-center justify-center">
-                      <img 
-                        src="https://images.unsplash.com/photo-1616422285623-13ff0162193c?auto=format&fit=crop&q=80&w=600"
-                        alt="Polishing Vespa"
-                        className="w-full h-full object-cover"
-                        referrerPolicy="no-referrer"
-                      />
-                      
-                      {/* Swipe microfiber sweeping animation overlay */}
-                      {isWiping && (
-                        <motion.div 
-                          initial={{ left: '-100%' }}
-                          animate={{ left: '100%' }}
-                          transition={{ duration: 1.5, ease: 'easeInOut' }}
-                          className="absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-white/80 to-transparent skew-x-12 z-20 flex items-center justify-center"
-                        >
-                          <span className="text-2xl">🧽</span>
-                        </motion.div>
-                      )}
-
-                      {/* Sparkles particle effects */}
-                      {(isWiping || wipeComplete) && (
-                        <div className="absolute inset-0 z-10 pointer-events-none">
-                          <motion.span animate={{ scale: [0, 1.2, 0], x: [10, 30, 15], y: [10, 40, 20] }} transition={{ repeat: Infinity, duration: 1 }} className="absolute text-brand-yellow text-xl">✨</motion.span>
-                          <motion.span animate={{ scale: [0, 1.5, 0], x: [180, 210, 190], y: [100, 120, 110] }} transition={{ repeat: Infinity, duration: 1.2, delay: 0.2 }} className="absolute text-brand-yellow text-2xl">✨</motion.span>
-                          <motion.span animate={{ scale: [0, 1.3, 0], x: [100, 120, 110], y: [50, 70, 60] }} transition={{ repeat: Infinity, duration: 0.8, delay: 0.4 }} className="absolute text-brand-yellow text-lg">✨</motion.span>
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+                    {/* Left Info Column */}
+                    <div className="lg:col-span-7 space-y-5 flex flex-col justify-between">
+                      <div className="space-y-4">
+                        <div className="flex flex-wrap items-center gap-3">
+                          <h4 className="font-display font-black text-lg text-brand-charcoal">
+                            {routesData[selectedRoute].title}
+                          </h4>
+                          <span className="inline-flex items-center gap-1 bg-brand-yellow/35 text-brand-olive-dark text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">
+                            ⚡ {routesData[selectedRoute].intensity}
+                          </span>
                         </div>
-                      )}
 
-                      <div className="absolute inset-0 bg-brand-charcoal/20" />
-                      <div className="absolute bottom-3 left-3 bg-brand-charcoal/80 text-brand-cream text-[10px] font-mono font-bold px-2 py-1 rounded-md">
-                        {isWiping ? '⚡ Polishing Active...' : wipeComplete ? '✅ Gloss Standard 100%' : '⏱️ Pre-Delivery Handover'}
+                        <div className="grid grid-cols-2 gap-4 bg-brand-cream/40 p-3 rounded-xl border border-brand-olive/10">
+                          <div>
+                            <span className="text-[10px] uppercase font-bold text-brand-charcoal/45 block">Total Distance</span>
+                            <span className="text-sm font-black text-brand-olive">{routesData[selectedRoute].distance}</span>
+                          </div>
+                          <div>
+                            <span className="text-[10px] uppercase font-bold text-brand-charcoal/45 block">Est. Travel Time</span>
+                            <span className="text-sm font-black text-brand-olive">{routesData[selectedRoute].duration}</span>
+                          </div>
+                        </div>
+
+                        {/* List of recommended spots */}
+                        <div className="space-y-3.5">
+                          <span className="text-[10px] uppercase font-bold text-brand-charcoal/50 tracking-wider block font-black">Recommended Stops:</span>
+                          <div className="space-y-3 border-l-2 border-brand-olive/20 pl-4 ml-1">
+                            {routesData[selectedRoute].spots.map((spot, i) => (
+                              <div key={i} className="relative">
+                                <div className="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-brand-olive border border-brand-yellow" />
+                                <span className="font-display font-black text-xs text-brand-charcoal block leading-none">{spot.name}</span>
+                                <span className="text-xs text-brand-charcoal/70 leading-normal font-medium mt-1 block">{spot.desc}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="pt-2 border-t border-brand-olive/5">
+                        <button
+                          id="btn-route-browse-bikes"
+                          onClick={onBrowseBikes}
+                          className="bg-brand-olive hover:bg-brand-olive-light text-brand-yellow font-sans font-black text-xs px-5 py-3 rounded-xl shadow-xs transition-all hover:scale-[1.02] cursor-pointer inline-flex items-center gap-1.5"
+                        >
+                          Choose Ride For This Route
+                          <ArrowRight className="w-4 h-4 text-brand-yellow" />
+                        </button>
                       </div>
                     </div>
 
-                    <div className="lg:col-span-7 space-y-4">
-                      <p className="text-brand-charcoal/90 text-xs sm:text-sm font-medium leading-relaxed">
-                        We maintain the highest hygiene and presentation standards in South India. Our pit crew wipes down handles, seats, and mirrors with medical-grade disinfectant and microfiber cloths between every booking.
-                      </p>
-
-                      <div className="grid grid-cols-2 gap-3">
-                        <div className="border border-brand-olive/10 bg-brand-cream/40 p-3 rounded-lg flex items-center gap-2.5">
-                          <span className="text-xl">🧴</span>
-                          <div>
-                            <span className="text-[10px] uppercase font-bold text-brand-charcoal/50 block">Sanitization</span>
-                            <span className="text-xs font-bold text-brand-olive">Grips & Levers Disinfected</span>
-                          </div>
-                        </div>
-                        <div className="border border-brand-olive/10 bg-brand-cream/40 p-3 rounded-lg flex items-center gap-2.5">
-                          <span className="text-xl">🛞</span>
-                          <div>
-                            <span className="text-[10px] uppercase font-bold text-brand-charcoal/50 block">Tire Checks</span>
-                            <span className="text-xs font-bold text-brand-olive">Calibrated Dual Air Check</span>
-                          </div>
-                        </div>
-                        <div className="border border-brand-olive/10 bg-brand-cream/40 p-3 rounded-lg flex items-center gap-2.5">
-                          <span className="text-xl">⚙️</span>
-                          <div>
-                            <span className="text-[10px] uppercase font-bold text-brand-charcoal/50 block">Multi-Point Check</span>
-                            <span className="text-xs font-bold text-brand-olive">Brakes & Accel Calibrated</span>
-                          </div>
-                        </div>
-                        <div className="border border-brand-olive/10 bg-brand-cream/40 p-3 rounded-lg flex items-center gap-2.5">
-                          <span className="text-xl">✨</span>
-                          <div>
-                            <span className="text-[10px] uppercase font-bold text-brand-charcoal/50 block">Chassis Gloss</span>
-                            <span className="text-xs font-bold text-brand-olive">Microfiber Mirror Wipe</span>
-                          </div>
+                    {/* Right Column Visual / Card */}
+                    <div className="lg:col-span-5 flex flex-col justify-between gap-4">
+                      <div className="relative rounded-2xl overflow-hidden border-2 border-brand-olive shadow-sm h-48 sm:h-52">
+                        <img 
+                          src={routesData[selectedRoute].image}
+                          alt={routesData[selectedRoute].title}
+                          className="w-full h-full object-cover"
+                          referrerPolicy="no-referrer"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-brand-charcoal/60 to-transparent" />
+                        <div className="absolute bottom-3 left-3 bg-brand-yellow text-brand-charcoal text-[9px] font-mono font-bold px-2.5 py-1 rounded-md uppercase tracking-wider">
+                          📍 Curated Stop Map
                         </div>
                       </div>
 
-                      <div className="pt-2 flex items-center gap-4">
-                        <button
-                          id="btn-simulate-wipe"
-                          onClick={() => {
-                            if (isWiping) return;
-                            setIsWiping(true);
-                            setWipeComplete(false);
-                            setTimeout(() => {
-                              setIsWiping(false);
-                              setWipeComplete(true);
-                              setWipeCount(prev => prev + 1);
-                            }, 1500);
-                          }}
-                          disabled={isWiping}
-                          className="bg-brand-olive hover:bg-brand-olive-light text-brand-yellow font-sans font-extrabold text-xs px-5 py-3 rounded-xl shadow-xs transition-all hover:scale-[1.02] cursor-pointer disabled:bg-brand-olive/60"
-                        >
-                          {isWiping ? '🧽 Polishing in Progress...' : '✨ Launch Microfiber Polish Simulator'}
-                        </button>
-                        
-                        {wipeComplete && (
-                          <motion.span 
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            className="text-xs font-bold text-brand-olive flex items-center gap-1 bg-brand-yellow/30 px-3 py-1.5 rounded-lg border border-brand-olive/10"
-                          >
-                            <span>🎉 Ride Gloss Verified: 100%!</span>
-                          </motion.span>
-                        )}
+                      <div className="bg-brand-yellow/10 border border-brand-olive/20 p-3.5 rounded-xl space-y-1">
+                        <span className="text-[10px] uppercase font-bold text-brand-olive-dark block">💡 Riding Pro-Tip:</span>
+                        <p className="text-xs text-brand-charcoal/80 leading-relaxed font-semibold">
+                          {routesData[selectedRoute].mapTip}
+                        </p>
+                      </div>
+
+                      <div className="bg-brand-cream border border-brand-olive/10 p-3.5 rounded-xl space-y-1">
+                        <span className="text-[10px] uppercase font-bold text-brand-charcoal/45 block">Did You Know?</span>
+                        <p className="text-xs text-brand-charcoal/70 leading-relaxed font-medium italic">
+                          {routesData[selectedRoute].funFact}
+                        </p>
                       </div>
                     </div>
                   </div>
