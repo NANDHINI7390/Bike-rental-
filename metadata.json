@@ -1,0 +1,6 @@
+{
+  "name": "Laya Bike Rental",
+  "description": "A premium and highly polished bike rental website demo for Laya Bike Rental in Pondicherry, styled with a mesmerising olive green, yellow, and black color scheme.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
